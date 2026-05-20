@@ -16,25 +16,30 @@ data class RegisterRequest(
     override fun validate() {
         buildValidationService {
             field("firstName", firstName) {
+                required()
                 min(2)
                 max(32)
             }
 
             field("lastName", lastName) {
+                required()
                 min(2)
                 max(32)
             }
 
             field("email", email) {
+                required()
                 email()
                 max(32)
             }
 
             field("password", password) {
+                required()
                 min(8)
             }
 
             field("confirmPassword", confirmPassword) {
+                required()
                 min(8)
             }
 

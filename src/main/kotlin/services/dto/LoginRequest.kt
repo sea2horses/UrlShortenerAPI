@@ -13,11 +13,13 @@ data class LoginRequest(
     override fun validate() {
         buildValidationService {
             field("email", email) {
+                required()
                 email()
                 max(32)
             }
 
             field("password", password) {
+                required()
                 min(8)
                 max(32)
             }

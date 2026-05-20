@@ -2,6 +2,14 @@ package com.lemonpie.models.exceptions
 
 import java.util.UUID
 
+fun ValidationObject<String>.required(): ValidationObject<String> {
+    return useValidation {
+        if (value.isBlank())
+            "Field is required"
+        else null
+    }
+}
+
 fun ValidationObject<String>.email(): ValidationObject<String> {
     val regex = Regex(EMAIL_REGEX)
 
