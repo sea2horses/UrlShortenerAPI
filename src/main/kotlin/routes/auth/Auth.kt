@@ -4,6 +4,7 @@ import com.lemonpie.services.AuthService
 import com.lemonpie.services.dto.LoginRequest
 import com.lemonpie.services.dto.RefreshRequest
 import com.lemonpie.services.dto.RegisterRequest
+import com.lemonpie.services.dto.receiveWithValidation
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.request.receive
@@ -16,7 +17,7 @@ fun Application.configureAuth(authService: AuthService) {
     routing {
         route("/auth") {
             post("/register") {
-                val request = call.receive<RegisterRequest>()
+                val request = call.receiveWithValidation<RegisterRequest>()
                 val response = authService.register(request)
 
                 if (response == null) call.respond(HttpStatusCode.BadRequest)
@@ -24,7 +25,7 @@ fun Application.configureAuth(authService: AuthService) {
             }
 
             post("/login") {
-                val request = call.receive<LoginRequest>()
+                val request = call.receiveWithValidation<LoginRequest>()
                 val response = authService.login(request.email, request.password)
 
                 if (response == null) call.respond(HttpStatusCode.BadRequest)

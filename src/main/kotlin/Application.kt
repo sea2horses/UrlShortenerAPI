@@ -1,6 +1,7 @@
 package com.lemonpie
 
 import com.lemonpie.plugins.configureDatabases
+import com.lemonpie.plugins.configureExceptions
 import com.lemonpie.plugins.configureHttp
 import com.lemonpie.plugins.configureSecurity
 import com.lemonpie.plugins.configureSerialization
@@ -34,8 +35,9 @@ fun Application.module() {
     val authService = DatabaseAuthService(userRepository, tokenRepository)
 
     configureDatabases()
-    configureRouting(authService)
     configureSerialization()
+    configureExceptions()
+    configureRouting(authService)
     configureHttp()
     configureSecurity(jwtService)
 }

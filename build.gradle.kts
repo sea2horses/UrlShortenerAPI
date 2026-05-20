@@ -46,6 +46,7 @@ dependencies {
     implementation(ktorLibs.server.netty)
     implementation(ktorLibs.server.openapi)
     implementation(ktorLibs.server.routingOpenapi)
+    implementation(ktorLibs.server.statusPages)
     implementation(libs.exposed.core)
     implementation(libs.exposed.r2dbc)
     implementation(libs.h2database.h2)

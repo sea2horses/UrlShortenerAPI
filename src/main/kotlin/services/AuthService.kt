@@ -1,6 +1,7 @@
 package com.lemonpie.services
 
 import at.favre.lib.crypto.bcrypt.BCrypt
+import com.lemonpie.models.buildBackendError
 import com.lemonpie.repositories.UserRepository
 import com.lemonpie.repositories.auth.TokenRepository
 import com.lemonpie.services.dto.LoginResponse
@@ -43,12 +44,19 @@ class DatabaseAuthService(override val userRepository: UserRepository,
     override suspend fun register(request: RegisterRequest): LoginResponse? = suspendTransaction {
         println("Register action, checking email...")
         val exists = userRepository.findByEmail(request.email) != null
-        if (exists) return@suspendTransaction null
+        if (exists) {
+            throw buildBackendError(
+                code = "existing_email",
+                detail = "There was an error creating the user"
+            ) {
+                error("email", "A user with this email already exists")
+            }
+        }
 
         println("Register action, creating user...")
         val newUser = userRepository.add(
-            firstName = request.first_name,
-            lastName = request.last_name,
+            firstName = request.firstName,
+            lastName = request.lastName,
             email = request.email,
             passwordHash = makePassword(request.password)
         )
@@ -67,8 +75,11 @@ class DatabaseAuthService(override val userRepository: UserRepository,
     }
 
     override suspend fun login(email: String, password: String): LoginResponse? = suspendTransaction {
-        val user = userRepository.findByEmail(email) ?: return@suspendTransaction null
-        if(!checkPassword(password, user.passwordHash)) return@suspendTransaction null
+        val user = userRepository.findByEmail(email) ?:
+            throw buildBackendError("account_not_found", "The email is not associated to any account")
+
+        if(!checkPassword(password, user.passwordHash))
+            throw buildBackendError("incorrect_password", "The provided password is incorrect")
 
         // Create new access token
         val tokens = makeTokens(user.id) ?: return@suspendTransaction null
