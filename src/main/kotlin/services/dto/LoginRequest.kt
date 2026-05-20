@@ -21,12 +21,6 @@ data class LoginRequest(
                 min(8)
                 max(32)
             }
-
-            refine {
-                if(password.length < 5)
-                    "password" to "Password must  bee more than 5 characters"
-                else null
-            }
         }.validate()
     }
 }
