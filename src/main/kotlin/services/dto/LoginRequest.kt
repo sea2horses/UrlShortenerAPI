@@ -27,6 +27,6 @@ data class LoginRequest(
                     "password" to "Password must  bee more than 5 characters"
                 else null
             }
-        }
+        }.validate()
     }
 }
